@@ -13,77 +13,42 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+    commands.h
+    constants.h
+    facade.cpp
+    facade.h
+    expression_editor.cpp
+    expression_editor.h
+    expression_calculator.cpp
+    expression_calculator.h
+    lexeme.h
+    lexeme_factory.h
+    number_lexeme.cpp
+    number_lexeme.h
+    math_operator.cpp
+    math_operator.h
+    binary_operator.h
+    unary_operator.h
+    paren_lexeme.h
+    lexer_exception.h
+    math_exception.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(lab3
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-
-
-
-        lexerexception.h
-        shuntingyard.h
-        shuntingyard.cpp
-        mathexception.h
-
-
-
-        memory.h
-
-        calcfacade.h calcfacade.cpp
-
-
-        numberlexeme.h
-        numberlexeme.cpp
-        binaryoperator.h
-
-
-
-
-        parenlexeme.h
-        functionlexeme.h
-        unaryoperator.h
-
-
-
-
-
-
-        ifactorylexeme.h
-        numberfactory.h
-        binaryoperatorfactory.h
-        unaryoperatorfactory.h
-        functionfactory.h
-        parenfactory.h
-        manager.h
-
-        expressioneditor.h
-        expressioneditor.cpp
-        commands.h
-        commandmanager.h
-        commandmanager.cpp
-        operator.h
-        lexeme.h
-        parenlexeme.cpp
-        operator.cpp
-
+        res.qrc
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET lab3 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
         add_library(lab3 SHARED
             ${PROJECT_SOURCES}
         )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(lab3
             ${PROJECT_SOURCES}
@@ -93,12 +58,10 @@ endif()
 
 target_link_libraries(lab3 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.lab3)
+    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.lab3)
 endif()
+
 set_target_properties(lab3 PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

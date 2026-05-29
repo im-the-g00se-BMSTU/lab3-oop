@@ -1,25 +1,26 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-#include "calcfacade.h"
-#include <memory>
+#include "facade.h"
+
 #include <string>
 
-class ICommand {
+class Command {
 public:
-    explicit ICommand(CalcFacade& facade) : facade(facade) {}
+    explicit Command(Facade& facade)
+        : facade(facade) {}
 
-    virtual ~ICommand() = default;
-
+    virtual ~Command() = default;
     virtual void execute() = 0;
 
 protected:
-    CalcFacade& facade;
+    Facade& facade;
 };
 
-class DigitCommand : public ICommand {
+class DigitCommand : public Command {
 public:
-    DigitCommand(CalcFacade& facade, char digit) : ICommand(facade), digit(digit) {}
+    DigitCommand(Facade& facade, char digit)
+        : Command(facade), digit(digit) {}
 
     void execute() override {
         facade.pressDigit(digit);
@@ -29,130 +30,76 @@ private:
     char digit;
 };
 
-class DotCommand : public ICommand {
+class TextCommand : public Command {
 public:
-    using ICommand::ICommand;
+    TextCommand(Facade& facade, const std::string& text)
+        : Command(facade), text(text) {}
+
+protected:
+    std::string text;
+};
+
+class OperatorCommand : public TextCommand {
+public:
+    using TextCommand::TextCommand;
+
+    void execute() override {
+        facade.pressOperator(text);
+    }
+};
+
+class DotCommand : public Command {
+public:
+    using Command::Command;
 
     void execute() override {
         facade.pressDot();
     }
 };
 
-class OperatorCommand : public ICommand {
+class LeftParenCommand : public Command {
 public:
-    OperatorCommand(CalcFacade& facade, const std::string& text) : ICommand(facade), text(text) {}
-
-    void execute() override {
-        facade.pressOperator(text);
-    }
-
-private:
-    std::string text;
-};
-
-class FunctionCommand : public ICommand {
-public:
-    FunctionCommand(CalcFacade& facade, const std::string& text)
-        : ICommand(facade), text(text) {
-    }
-
-    void execute() override {
-        facade.pressFunction(text);
-    }
-
-private:
-    std::string text;
-};
-
-class LeftParenCommand : public ICommand {
-public:
-    using ICommand::ICommand;
+    using Command::Command;
 
     void execute() override {
         facade.pressLeftParen();
     }
 };
 
-class RightParenCommand : public ICommand {
+class RightParenCommand : public Command {
 public:
-    using ICommand::ICommand;
+    using Command::Command;
 
     void execute() override {
         facade.pressRightParen();
     }
 };
 
-class EqualsCommand : public ICommand {
+class EqualsCommand : public Command {
 public:
-    using ICommand::ICommand;
+    using Command::Command;
 
     void execute() override {
         facade.pressEquals();
     }
 };
 
-class ClearCommand : public ICommand {
+class ClearCommand : public Command {
 public:
-    using ICommand::ICommand;
+    using Command::Command;
 
     void execute() override {
         facade.pressClear();
     }
 };
 
-class BackspaceCommand : public ICommand {
+class BackspaceCommand : public Command {
 public:
-    using ICommand::ICommand;
+    using Command::Command;
 
     void execute() override {
         facade.pressBackspace();
     }
 };
-
-class MemoryAddCommand : public ICommand {
-public:
-    using ICommand::ICommand;
-
-    void execute() override {
-        facade.pressMemoryAdd();
-    }
-};
-
-class MemorySubCommand : public ICommand {
-public:
-    using ICommand::ICommand;
-
-    void execute() override {
-        facade.pressMemorySub();
-    }
-};
-
-class MemoryRecallCommand : public ICommand {
-public:
-    using ICommand::ICommand;
-
-    void execute() override {
-        facade.pressMemoryRecall();
-    }
-};
-
-class MemoryClearCommand : public ICommand {
-public:
-    using ICommand::ICommand;
-
-    void execute() override {
-        facade.pressMemoryClear();
-    }
-};
-
-class InverseCommand : public ICommand {
-public:
-    using ICommand::ICommand;
-
-    void execute() override {
-        facade.pressInverse();
-    }
-};
-
 
 #endif // COMMANDS_H

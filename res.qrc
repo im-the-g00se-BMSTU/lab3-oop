@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/calc.svg</file>
+        <file>res/monkey.gif</file>
+    </qresource>
+</RCC>

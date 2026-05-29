@@ -1,49 +1,48 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "commands.h"
+#include "constants.h"
+#include "facade.h"
+#include "./ui_mainwindow.h"
+
+#include <QApplication>
 #include <QMainWindow>
-#include "commandmanager.h"
-#include <QAbstractButton>
-#include <QProcess>
-#include <QDir>
-#include <QMessageBox>
+#include <QMovie>
+#include <QPushButton>
+#include <QResizeEvent>
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow() override;
 
-private:
-    Ui::MainWindow *ui;
-    CalcFacade facade;
-    CommandManager commandManager;
+protected:
+    void resizeEvent(QResizeEvent* event) override;
 
+private:
+    Ui::MainWindow* ui;
+    Facade facade;
+
+    void connectButtons();
     void refreshUi();
+
+    void executeCommand(class Command& command);
+
     void onDigitButtonClicked();
     void onOperatorButtonClicked();
-    void onFunctionButtonClicked();
     void onDotButtonClicked();
     void onLeftParenButtonClicked();
     void onRightParenButtonClicked();
     void onEqualsButtonClicked();
     void onClearButtonClicked();
-    void onDellButtonClicked();
-    void onUndoButtonClicked();
-    void onRedoButtonClicked();
-    void onMemoryAddButtonClicked();
-    void onMemorySubButtonClicked();
-    void onMemoryRecallButtonClicked();
-    void onMemoryClearButtonClicked();
-    void onInverseButtonClicked();
-    void onBestButtonClicked();
+    void onDeleteButtonClicked();
+
+    // пасхалка
+    QMovie* monkeyMovie;
+    void setupMonkeyAnimation();
 };
+
 #endif // MAINWINDOW_H
