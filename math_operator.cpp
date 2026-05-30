@@ -1,7 +1,32 @@
 #include "math_operator.h"
 
 MathOperator::MathOperator(const std::string& text, Type type)
-    : operatorText(text), operatorType(type) {}
+    : operatorText(text),
+      operatorType(type),
+      binaryOperations({
+          {"+", [](double left, double right) { return left + right; }},
+          {"-", [](double left, double right) { return left - right; }},
+          {"*", [](double left, double right) { return left * right; }},
+          {"/", [](double left, double right) {
+               if (std::abs(right) < Constants::Epsilon)
+                   throw MathException("Error: division by zero");
+               return left / right;
+           }}
+      }),
+      unaryOperations({
+          {"-", [](double value) { return -value; }}
+      }),
+      priorities({
+          {{"+", Type::Binary}, OperatorPriority::Additive},
+          {{"-", Type::Binary}, OperatorPriority::Additive},
+          {{"*", Type::Binary}, OperatorPriority::Multiplicative},
+          {{"/", Type::Binary}, OperatorPriority::Multiplicative},
+          {{"-", Type::Unary}, OperatorPriority::Unary},
+          {{"(", Type::LeftParen}, OperatorPriority::None},
+          {{")", Type::RightParen}, OperatorPriority::None}
+      }) {
+    validateOperator();
+}
 
 std::string MathOperator::text() const {
     return operatorText;
@@ -12,41 +37,25 @@ MathOperator::Type MathOperator::type() const {
 }
 
 Lexeme::OperatorPriority MathOperator::priority() const {
-    return info().priority;
-}
-
-bool MathOperator::exists(const std::string& text, Type type) {
-    return operationTable().find({text, type}) != operationTable().end();
-}
-
-const MathOperator::Info& MathOperator::info() const {
-    auto iterator = operationTable().find({operatorText, operatorType});
-    if (iterator == operationTable().end())
-        throw LexemeException("Unknown operator: " + operatorText);
+    auto iterator = priorities.find({operatorText, operatorType});
     return iterator->second;
 }
 
-const std::map<MathOperator::Key, MathOperator::Info>& MathOperator::operationTable() {
-    static const std::map<Key, Info> table = {
-        {{"+", Type::Binary}, {OperatorPriority::Additive, Type::Binary, {}, [](double left, double right) {
-             return left + right;
-         }}},
-        {{"-", Type::Binary}, {OperatorPriority::Additive, Type::Binary, {}, [](double left, double right) {
-             return left - right;
-         }}},
-        {{"*", Type::Binary}, {OperatorPriority::Multiplicative, Type::Binary, {}, [](double left, double right) {
-             return left * right;
-         }}},
-        {{"/", Type::Binary}, {OperatorPriority::Multiplicative, Type::Binary, {}, [](double left, double right) {
-             if (std::abs(right) < Constants::Epsilon)
-                 throw MathException("Error: division by zero");
-             return left / right;
-         }}},
-        {{"-", Type::Unary}, {OperatorPriority::Unary, Type::Unary, [](double value) {
-             return -value;
-         }, {}}},
-        {{"(", Type::LeftParen}, {OperatorPriority::None, Type::LeftParen, {}, {}}},
-        {{")", Type::RightParen}, {OperatorPriority::None, Type::RightParen, {}, {}}}
-    };
-    return table;
+void MathOperator::validateOperator() const {
+    if (priorities.find({operatorText, operatorType}) == priorities.end())
+        throw LexemeException("Unknown operator: " + operatorText);
+}
+
+double MathOperator::applyBinaryOperation(double left, double right) const {
+    auto iterator = binaryOperations.find(operatorText);
+    if (iterator == binaryOperations.end())
+        throw MathException("Error: invalid binary operation");
+    return iterator->second(left, right);
+}
+
+double MathOperator::applyUnaryOperation(double value) const {
+    auto iterator = unaryOperations.find(operatorText);
+    if (iterator == unaryOperations.end())
+        throw MathException("Error: invalid unary operation");
+    return iterator->second(value);
 }

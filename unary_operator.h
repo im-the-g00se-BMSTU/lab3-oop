@@ -19,9 +19,7 @@ public:
     }
 
     double apply(double value) const {
-        if (!info().unaryOperation)
-            throw MathException("Error: invalid unary operation");
-        return info().unaryOperation(value);
+        return applyUnaryOperation(value);
     }
 
     void evaluate(std::stack<double>& values) const override {

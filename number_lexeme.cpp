@@ -22,24 +22,16 @@ void NumberLexeme::evaluate(std::stack<double>& values) const {
     values.push(std::stod(numberText));
 }
 
-bool NumberLexeme::canAppendDigit() const {
-    return numberText.size() < Constants::MaxNumberLength;
-}
-
 void NumberLexeme::appendDigit(char digit) {
-    if (canAppendDigit())
+    if (numberText.size() < Constants::MaxNumberLength)
         numberText += digit;
-}
-
-bool NumberLexeme::canAppendDot() const {
-    return numberText.find('.') == std::string::npos &&
-           numberText.size() < Constants::MaxNumberLength;
 }
 
 void NumberLexeme::appendDot() {
     if (numberText.empty())
         numberText = "0.";
-    else if (canAppendDot())
+    else if (numberText.find('.') == std::string::npos &&
+             numberText.size() < Constants::MaxNumberLength)
         numberText += '.';
 }
 

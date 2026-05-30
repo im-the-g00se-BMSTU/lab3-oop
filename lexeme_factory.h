@@ -48,14 +48,10 @@ private:
     }
 
     static std::shared_ptr<Lexeme> createBinaryOperator(const std::string& text) {
-        if (!MathOperator::exists(text, MathOperator::Type::Binary))
-            throw LexemeException("Unknown binary operator: " + text);
         return std::make_shared<BinaryOperator>(text);
     }
 
     static std::shared_ptr<Lexeme> createUnaryOperator(const std::string& text) {
-        if (!MathOperator::exists(text, MathOperator::Type::Unary))
-            throw LexemeException("Unknown unary operator: " + text);
         return std::make_shared<UnaryOperator>(text);
     }
 

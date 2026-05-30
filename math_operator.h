@@ -19,33 +19,28 @@ public:
         RightParen
     };
 
-    using UnaryOperation = std::function<double(double)>;
-    using BinaryOperation = std::function<double(double, double)>;
-
-    struct Info {
-        OperatorPriority priority;
-        Type type;
-        UnaryOperation unaryOperation;
-        BinaryOperation binaryOperation;
-    };
-
     MathOperator(const std::string& text, Type type);
 
     std::string text() const override;
     Type type() const;
     OperatorPriority priority() const;
-    static bool exists(const std::string& text, Type type);
 
 protected:
-    const Info& info() const;
+    double applyBinaryOperation(double left, double right) const;
+    double applyUnaryOperation(double value) const;
 
 private:
-    using Key = std::pair<std::string, Type>;
+    using BinaryOperation = std::function<double(double, double)>;
+    using UnaryOperation = std::function<double(double)>;
+    using PriorityKey = std::pair<std::string, Type>;
 
-    static const std::map<Key, Info>& operationTable();
+    void validateOperator() const;
 
     std::string operatorText;
     Type operatorType;
+    std::map<std::string, BinaryOperation> binaryOperations;
+    std::map<std::string, UnaryOperation> unaryOperations;
+    std::map<PriorityKey, OperatorPriority> priorities;
 };
 
 #endif // MATH_OPERATOR_H

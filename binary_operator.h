@@ -22,9 +22,7 @@ public:
     }
 
     double apply(double left, double right) const {
-        if (!info().binaryOperation)
-            throw MathException("Error: invalid binary operation");
-        return info().binaryOperation(left, right);
+        return applyBinaryOperation(left, right);
     }
 
     void evaluate(std::stack<double>& values) const override {

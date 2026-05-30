@@ -16,9 +16,7 @@ public:
     bool canBePlacedAfter(const Lexeme* previous) const override;
     void evaluate(std::stack<double>& values) const override;
 
-    bool canAppendDigit() const;
     void appendDigit(char digit);
-    bool canAppendDot() const;
     void appendDot();
     const std::string& value() const;
     bool removeLastChar();
