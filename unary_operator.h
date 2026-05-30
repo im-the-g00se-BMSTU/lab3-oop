@@ -1,6 +1,7 @@
 #ifndef UNARY_OPERATOR_H
 #define UNARY_OPERATOR_H
 
+#include "exceptions.h"
 #include "math_operator.h"
 
 class UnaryOperator : public MathOperator {
@@ -9,9 +10,8 @@ public:
         : MathOperator(text, Type::Unary) {}
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        const MathOperator* op = dynamic_cast<const MathOperator*>(previous);
-        return !previous || (op && (op->type() == Type::LeftParen ||
-                                    op->type() == Type::Binary));
+        return !previous || previous->kind() == LexemeKind::LeftParen ||
+               previous->kind() == LexemeKind::BinaryOperator;
     }
 
     std::shared_ptr<Lexeme> clone() const override {

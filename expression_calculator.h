@@ -1,13 +1,8 @@
 #ifndef EXPRESSION_CALCULATOR_H
 #define EXPRESSION_CALCULATOR_H
 
-#include "binary_operator.h"
-#include "constants.h"
+#include "lexeme.h"
 #include "exceptions.h"
-#include "math_operator.h"
-#include "number_lexeme.h"
-#include "paren_lexeme.h"
-#include "unary_operator.h"
 
 #include <memory>
 #include <stack>
@@ -19,7 +14,6 @@ public:
     double evaluate(const std::vector<std::shared_ptr<Lexeme>>& rpn);
 
 private:
-    Lexeme::OperatorPriority priority(const std::shared_ptr<Lexeme>& lexeme) const;
     void appendRemainingOperators(std::vector<std::shared_ptr<Lexeme>>& output,
                                   std::stack<std::shared_ptr<Lexeme>>& operators) const;
     void handleRightParen(std::vector<std::shared_ptr<Lexeme>>& output,

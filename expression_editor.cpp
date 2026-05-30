@@ -26,8 +26,8 @@ Lexeme* ExpressionEditor::lastLexeme() const {
 NumberLexeme* ExpressionEditor::lastNumber() const {
     NumberLexeme* result = nullptr;
     Lexeme* lexeme = lastLexeme();
-    if (lexeme)
-        result = dynamic_cast<NumberLexeme*>(lexeme);
+    if (lexeme && lexeme->kind() == LexemeKind::Number)
+        result = static_cast<NumberLexeme*>(lexeme);
     return result;
 }
 
@@ -71,9 +71,9 @@ void ExpressionEditor::appendDot() {
 bool ExpressionEditor::hasOpenParen() const {
     int balance = 0;
     for (const std::shared_ptr<Lexeme>& lexeme : lexemes) {
-        if (typeid(*lexeme) == typeid(LeftParenLexeme))
+        if (lexeme->kind() == LexemeKind::LeftParen)
             ++balance;
-        else if (typeid(*lexeme) == typeid(RightParenLexeme))
+        else if (lexeme->kind() == LexemeKind::RightParen)
             --balance;
     }
     return balance > 0;
@@ -81,14 +81,14 @@ bool ExpressionEditor::hasOpenParen() const {
 
 bool ExpressionEditor::lastLexemeCanCloseParen() const {
     const Lexeme* lexeme = lastLexeme();
-    return lexeme && (typeid(*lexeme) == typeid(NumberLexeme) ||
-                      typeid(*lexeme) == typeid(RightParenLexeme));
+    return lexeme && (lexeme->kind() == LexemeKind::Number ||
+                      lexeme->kind() == LexemeKind::RightParen);
 }
 
 bool ExpressionEditor::shouldUseUnaryOperator(const std::string& text) const {
     const Lexeme* lexeme = lastLexeme();
-    return text == "-" && (!lexeme || typeid(*lexeme) == typeid(LeftParenLexeme) ||
-                           typeid(*lexeme) == typeid(BinaryOperator));
+    return text == "-" && (!lexeme || lexeme->kind() == LexemeKind::LeftParen ||
+                           lexeme->kind() == LexemeKind::BinaryOperator);
 }
 
 void ExpressionEditor::appendLexeme(LexemeKind kind, const std::string& text) {
@@ -135,8 +135,8 @@ void ExpressionEditor::appendRightParen() {
 bool ExpressionEditor::canEvaluate() const {
     const Lexeme* lexeme = lastLexeme();
     return !empty() && !hasOpenParen() &&
-           (typeid(*lexeme) == typeid(NumberLexeme) ||
-            typeid(*lexeme) == typeid(RightParenLexeme));
+           (lexeme->kind() == LexemeKind::Number ||
+            lexeme->kind() == LexemeKind::RightParen);
 }
 
 void ExpressionEditor::backspace() {

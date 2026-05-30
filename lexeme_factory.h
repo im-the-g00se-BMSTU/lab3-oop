@@ -12,14 +12,6 @@
 #include <memory>
 #include <string>
 
-enum class LexemeKind {
-    Number,
-    BinaryOperator,
-    UnaryOperator,
-    LeftParen,
-    RightParen
-};
-
 class LexemeFactory {
 public:
     LexemeFactory()

@@ -4,24 +4,31 @@
 #include "expression_calculator.h"
 #include "expression_editor.h"
 #include "constants.h"
-#include "exceptions.h"
 
 #include <cmath>
+#include <exception>
 #include <format>
 #include <memory>
-#include <string>
 #include <vector>
+#include <map>
+#include <string>
+
+enum class InputCommandType {
+    Dot,
+    LeftParen,
+    RightParen,
+    Clear,
+    Backspace
+};
 
 class Facade {
 public:
-    void pressDigit(char digit);
-    void pressDot();
-    void pressOperator(const std::string& text);
-    void pressLeftParen();
-    void pressRightParen();
-    void pressClear();
-    void pressBackspace();
-    void pressEquals();
+    Facade();
+
+    void handleDigitInput(const std::string& text);
+    void handleOperatorInput(const std::string& text);
+    void handleCommandInput(InputCommandType type);
+    void evaluateExpression();
 
     std::string getDisplayText() const;
     std::string getErrorText() const;
@@ -34,6 +41,7 @@ private:
     ExpressionEditor editor;
     ExpressionCalculator calculator;
     std::string errorText;
+    std::map<InputCommandType, void (ExpressionEditor::*)()> commandHandlers;
 };
 
 #endif // FACADE_H

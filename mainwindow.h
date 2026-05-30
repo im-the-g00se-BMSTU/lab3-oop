@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "commands.h"
+#include "inputs.h"
 #include "constants.h"
 #include "facade.h"
 #include "./ui_mainwindow.h"
@@ -29,7 +29,7 @@ private:
     void connectButtons();
     void refreshUi();
 
-    void executeCommand(class Command& command);
+    void executeCommand(Input& input);
 
     void onDigitButtonClicked();
     void onOperatorButtonClicked();

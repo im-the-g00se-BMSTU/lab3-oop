@@ -2,9 +2,8 @@
 #define BINARY_OPERATOR_H
 
 #include "constants.h"
-#include "math_operator.h"
-#include "number_lexeme.h"
 #include "exceptions.h"
+#include "math_operator.h"
 
 class BinaryOperator : public MathOperator {
 public:
@@ -12,9 +11,8 @@ public:
         : MathOperator(text, Type::Binary) {}
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        const MathOperator* op = dynamic_cast<const MathOperator*>(previous);
-        return previous && (typeid(*previous) == typeid(NumberLexeme) ||
-                            (op && op->type() == Type::RightParen));
+        return previous && (previous->kind() == LexemeKind::Number ||
+                            previous->kind() == LexemeKind::RightParen);
     }
 
     std::shared_ptr<Lexeme> clone() const override {

@@ -2,7 +2,6 @@
 #define PAREN_LEXEME_H
 
 #include "math_operator.h"
-#include "number_lexeme.h"
 
 class LeftParenLexeme : public MathOperator {
 public:
@@ -13,10 +12,9 @@ public:
     }
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        const MathOperator* op = dynamic_cast<const MathOperator*>(previous);
-        return !previous || (op && (op->type() == Type::LeftParen ||
-                                    op->type() == Type::Binary ||
-                                    op->type() == Type::Unary));
+        return !previous || previous->kind() == LexemeKind::LeftParen ||
+               previous->kind() == LexemeKind::BinaryOperator ||
+               previous->kind() == LexemeKind::UnaryOperator;
     }
 };
 
@@ -30,9 +28,8 @@ public:
     }
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        const MathOperator* op = dynamic_cast<const MathOperator*>(previous);
-        return previous && (typeid(*previous) == typeid(NumberLexeme) ||
-                            (op && op->type() == Type::RightParen));
+        return previous && (previous->kind() == LexemeKind::Number ||
+                            previous->kind() == LexemeKind::RightParen);
     }
 };
 

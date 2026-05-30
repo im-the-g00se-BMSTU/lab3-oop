@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include <string>
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), facade(), monkeyMovie(nullptr) {
     ui->setupUi(this);
@@ -30,6 +32,7 @@ void MainWindow::connectButtons() {
     connect(ui->multiplyButton, &QPushButton::clicked, this, &MainWindow::onOperatorButtonClicked);
     connect(ui->divideButton, &QPushButton::clicked, this, &MainWindow::onOperatorButtonClicked);
     connect(ui->dotButton, &QPushButton::clicked, this, &MainWindow::onDotButtonClicked);
+
     connect(ui->leftParenButton, &QPushButton::clicked, this, &MainWindow::onLeftParenButtonClicked);
     connect(ui->rightParenButton, &QPushButton::clicked, this, &MainWindow::onRightParenButtonClicked);
     connect(ui->equalsButton, &QPushButton::clicked, this, &MainWindow::onEqualsButtonClicked);
@@ -42,15 +45,16 @@ void MainWindow::refreshUi() {
     ui->errorLabel->setText(QString::fromStdString(facade.getErrorText()));
 }
 
-void MainWindow::executeCommand(Command& command) {
-    command.execute();
+void MainWindow::executeCommand(Input& input) {
+    input.execute();
     refreshUi();
 }
 
 void MainWindow::onDigitButtonClicked() {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button && !button->text().isEmpty()) {
-        DigitCommand command(facade, button->text().front().toLatin1());
+        std::string text(1, button->text().front().toLatin1());
+        InputDigit command(facade, text);
         executeCommand(command);
     }
 }
@@ -58,38 +62,38 @@ void MainWindow::onDigitButtonClicked() {
 void MainWindow::onOperatorButtonClicked() {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        OperatorCommand command(facade, button->text().toStdString());
+        InputOperator command(facade, button->text().toStdString());
         executeCommand(command);
     }
 }
 
 void MainWindow::onDotButtonClicked() {
-    DotCommand command(facade);
+    InputCommand command(facade, InputCommandType::Dot);
     executeCommand(command);
 }
 
 void MainWindow::onLeftParenButtonClicked() {
-    LeftParenCommand command(facade);
+    InputCommand command(facade, InputCommandType::LeftParen);
     executeCommand(command);
 }
 
 void MainWindow::onRightParenButtonClicked() {
-    RightParenCommand command(facade);
-    executeCommand(command);
-}
-
-void MainWindow::onEqualsButtonClicked() {
-    EqualsCommand command(facade);
+    InputCommand command(facade, InputCommandType::RightParen);
     executeCommand(command);
 }
 
 void MainWindow::onClearButtonClicked() {
-    ClearCommand command(facade);
+    InputCommand command(facade, InputCommandType::Clear);
     executeCommand(command);
 }
 
 void MainWindow::onDeleteButtonClicked() {
-    BackspaceCommand command(facade);
+    InputCommand command(facade, InputCommandType::Backspace);
+    executeCommand(command);
+}
+
+void MainWindow::onEqualsButtonClicked() {
+    InputEvaluation command(facade);
     executeCommand(command);
 }
 

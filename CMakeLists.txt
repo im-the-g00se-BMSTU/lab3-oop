@@ -17,7 +17,7 @@ set(PROJECT_SOURCES
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
-    commands.h
+    inputs.h
     constants.h
     facade.cpp
     facade.h

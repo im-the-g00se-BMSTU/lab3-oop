@@ -1,42 +1,33 @@
 #include "facade.h"
 
-void Facade::pressDigit(char digit) {
+Facade::Facade()
+    : commandHandlers({
+          {InputCommandType::Dot, &ExpressionEditor::appendDot},
+          {InputCommandType::LeftParen, &ExpressionEditor::appendLeftParen},
+          {InputCommandType::RightParen, &ExpressionEditor::appendRightParen},
+          {InputCommandType::Clear, &ExpressionEditor::clear},
+          {InputCommandType::Backspace, &ExpressionEditor::backspace}
+      }) {}
+
+void Facade::handleDigitInput(const std::string& text) {
     clearError();
-    editor.appendDigit(digit);
+    if (!text.empty())
+        editor.appendDigit(text.front());
 }
 
-void Facade::pressDot() {
-    clearError();
-    editor.appendDot();
-}
-
-void Facade::pressOperator(const std::string& text) {
+void Facade::handleOperatorInput(const std::string& text) {
     clearError();
     editor.appendOperator(text);
 }
 
-void Facade::pressLeftParen() {
+void Facade::handleCommandInput(InputCommandType type) {
     clearError();
-    editor.appendLeftParen();
+    auto iterator = commandHandlers.find(type);
+    if (iterator != commandHandlers.end())
+        (editor.*iterator->second)();
 }
 
-void Facade::pressRightParen() {
-    clearError();
-    editor.appendRightParen();
-}
-
-void Facade::pressClear() {
-    editor.clear();
-    clearError();
-}
-
-void Facade::pressBackspace() {
-    editor.backspace();
-    clearError();
-}
-
-void Facade::pressEquals() {
-    clearError();
+void Facade::evaluateExpression() {
     try {
         if (!editor.canEvaluate())
             setError("Cannot evaluate expression");
@@ -44,15 +35,23 @@ void Facade::pressEquals() {
             std::vector<std::shared_ptr<Lexeme>> rpn = calculator.translateToRpn(editor.getLexemes());
             editor.setResult(formatNumber(calculator.evaluate(rpn)));
         }
-    } catch (const LexemeException& exception) {
-        setError(exception.what());
-    } catch (const MathException& exception) {
+    } catch (const std::exception& exception) {
         setError(exception.what());
     }
 }
 
 std::string Facade::getDisplayText() const {
     return editor.transformToString();
+}
+
+std::string Facade::formatNumber(double value) const {
+    std::string result = "0";
+    if (std::abs(value) >= Constants::Epsilon) {
+        result = std::format("{:.{}g}", value, Constants::NumberFormatPrecision);
+        if (result == "-0")
+            result = "0";
+    }
+    return result;
 }
 
 std::string Facade::getErrorText() const {
@@ -65,14 +64,4 @@ void Facade::clearError() {
 
 void Facade::setError(const std::string& text) {
     errorText = text;
-}
-
-std::string Facade::formatNumber(double value) const {
-    std::string result = "0";
-    if (std::abs(value) >= Constants::Epsilon) {
-        result = std::format("{:.{}g}", value, Constants::NumberFormatPrecision);
-        if (result == "-0")
-            result = "0";
-    }
-    return result;
 }

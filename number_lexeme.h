@@ -3,7 +3,6 @@
 
 #include "constants.h"
 #include "lexeme.h"
-#include "math_operator.h"
 
 #include <string>
 
@@ -11,6 +10,7 @@ class NumberLexeme : public Lexeme {
 public:
     explicit NumberLexeme(const std::string& value);
 
+    LexemeKind kind() const override;
     std::string text() const override;
     std::shared_ptr<Lexeme> clone() const override;
     bool canBePlacedAfter(const Lexeme* previous) const override;

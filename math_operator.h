@@ -1,8 +1,8 @@
 #ifndef MATH_OPERATOR_H
 #define MATH_OPERATOR_H
 
-#include "constants.h"
 #include "lexeme.h"
+#include "constants.h"
 #include "exceptions.h"
 
 #include <cmath>
@@ -21,9 +21,9 @@ public:
 
     MathOperator(const std::string& text, Type type);
 
+    LexemeKind kind() const override;
     std::string text() const override;
-    Type type() const;
-    OperatorPriority priority() const;
+    OperatorPriority priority() const override;
 
 protected:
     double applyBinaryOperation(double left, double right) const;
@@ -35,6 +35,11 @@ private:
     using PriorityKey = std::pair<std::string, Type>;
 
     void validateOperator() const;
+    static double add(double left, double right);
+    static double subtract(double left, double right);
+    static double multiply(double left, double right);
+    static double divide(double left, double right);
+    static double negate(double value);
 
     std::string operatorText;
     Type operatorType;

@@ -3,6 +3,10 @@
 NumberLexeme::NumberLexeme(const std::string& value)
     : numberText(value) {}
 
+LexemeKind NumberLexeme::kind() const {
+    return LexemeKind::Number;
+}
+
 std::string NumberLexeme::text() const {
     return numberText;
 }
@@ -12,10 +16,9 @@ std::shared_ptr<Lexeme> NumberLexeme::clone() const {
 }
 
 bool NumberLexeme::canBePlacedAfter(const Lexeme* previous) const {
-    const MathOperator* op = dynamic_cast<const MathOperator*>(previous);
-    return !previous || (op && (op->type() == MathOperator::Type::LeftParen ||
-                                op->type() == MathOperator::Type::Binary ||
-                                op->type() == MathOperator::Type::Unary));
+    return !previous || previous->kind() == LexemeKind::LeftParen ||
+           previous->kind() == LexemeKind::BinaryOperator ||
+           previous->kind() == LexemeKind::UnaryOperator;
 }
 
 void NumberLexeme::evaluate(std::stack<double>& values) const {
