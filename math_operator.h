@@ -3,8 +3,7 @@
 
 #include "constants.h"
 #include "lexeme.h"
-#include "lexer_exception.h"
-#include "math_exception.h"
+#include "exceptions.h"
 
 #include <cmath>
 #include <functional>

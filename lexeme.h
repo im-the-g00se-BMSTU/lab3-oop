@@ -4,6 +4,7 @@
 #include "constants.h"
 
 #include <memory>
+#include <stack>
 #include <string>
 
 class Lexeme {
@@ -19,6 +20,7 @@ public:
     virtual std::string text() const = 0;
     virtual std::shared_ptr<Lexeme> clone() const = 0;
     virtual bool canBePlacedAfter(const Lexeme* previous) const = 0;
+    virtual void evaluate(std::stack<double>&) const {}
 
     virtual bool isEqual(const Lexeme& other) const {
         return typeid(*this) == typeid(other) && text() == other.text();

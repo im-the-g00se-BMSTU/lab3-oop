@@ -96,13 +96,18 @@ void MainWindow::onDeleteButtonClicked() {
 // пасхалка
 void MainWindow::setupMonkeyAnimation() {
     monkeyMovie = new QMovie(":/res/monkey.gif", QByteArray(), this);
-    monkeyMovie->setScaledSize(ui->monkeyLabel->contentsRect().size());
     ui->monkeyLabel->setMovie(monkeyMovie);
+    updateMonkeySize();
     monkeyMovie->start();
+}
+
+void MainWindow::updateMonkeySize() {
+    QSize size = ui->monkeyLabel->contentsRect().size();
+    monkeyMovie->setScaledSize(QSize(size.width(), size.height()));
     ui->monkeyLabel->setVisible(width() > Constants::MonkeyVisibleMinWidth);
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
+    updateMonkeySize();
     QMainWindow::resizeEvent(event);
-    ui->monkeyLabel->setVisible(width() > Constants::MonkeyVisibleMinWidth);
 }

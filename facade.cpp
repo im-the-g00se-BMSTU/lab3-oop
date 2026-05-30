@@ -44,7 +44,7 @@ void Facade::pressEquals() {
             std::vector<std::shared_ptr<Lexeme>> rpn = calculator.translateToRpn(editor.getLexemes());
             editor.setResult(formatNumber(calculator.evaluate(rpn)));
         }
-    } catch (const LexerException& exception) {
+    } catch (const LexemeException& exception) {
         setError(exception.what());
     } catch (const MathException& exception) {
         setError(exception.what());

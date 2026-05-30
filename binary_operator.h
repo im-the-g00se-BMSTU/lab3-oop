@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "math_operator.h"
 #include "number_lexeme.h"
+#include "exceptions.h"
 
 class BinaryOperator : public MathOperator {
 public:
@@ -24,6 +25,16 @@ public:
         if (!info().binaryOperation)
             throw MathException("Error: invalid binary operation");
         return info().binaryOperation(left, right);
+    }
+
+    void evaluate(std::stack<double>& values) const override {
+        if (values.size() < Constants::BinaryOperandCount)
+            throw MathException("Error: not enough arguments for binary operator");
+        double right = values.top();
+        values.pop();
+        double left = values.top();
+        values.pop();
+        values.push(apply(left, right));
     }
 };
 

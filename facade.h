@@ -4,8 +4,7 @@
 #include "expression_calculator.h"
 #include "expression_editor.h"
 #include "constants.h"
-#include "lexer_exception.h"
-#include "math_exception.h"
+#include "exceptions.h"
 
 #include <cmath>
 #include <format>

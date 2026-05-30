@@ -34,8 +34,8 @@ set(PROJECT_SOURCES
     binary_operator.h
     unary_operator.h
     paren_lexeme.h
-    lexer_exception.h
-    math_exception.h
+    exceptions.h
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

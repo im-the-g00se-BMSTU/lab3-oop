@@ -3,8 +3,7 @@
 
 #include "binary_operator.h"
 #include "constants.h"
-#include "lexer_exception.h"
-#include "math_exception.h"
+#include "exceptions.h"
 #include "math_operator.h"
 #include "number_lexeme.h"
 #include "paren_lexeme.h"
@@ -28,9 +27,6 @@ private:
     void handleOperator(const std::shared_ptr<Lexeme>& lexeme,
                         std::vector<std::shared_ptr<Lexeme>>& output,
                         std::stack<std::shared_ptr<Lexeme>>& operators) const;
-    void evaluateLexeme(const std::shared_ptr<Lexeme>& lexeme, std::stack<double>& values) const;
-    void evaluateBinaryOperator(const BinaryOperator& op, std::stack<double>& values) const;
-    double popValue(std::stack<double>& values, const std::string& message) const;
 };
 
 #endif // EXPRESSION_CALCULATOR_H

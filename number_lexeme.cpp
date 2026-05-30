@@ -18,6 +18,10 @@ bool NumberLexeme::canBePlacedAfter(const Lexeme* previous) const {
                                 op->type() == MathOperator::Type::Unary));
 }
 
+void NumberLexeme::evaluate(std::stack<double>& values) const {
+    values.push(std::stod(numberText));
+}
+
 bool NumberLexeme::canAppendDigit() const {
     return numberText.size() < Constants::MaxNumberLength;
 }

@@ -6,8 +6,7 @@
 
 class LeftParenLexeme : public MathOperator {
 public:
-    LeftParenLexeme()
-        : MathOperator("(", Type::LeftParen) {}
+    LeftParenLexeme() : MathOperator("(", Type::LeftParen) {}
 
     std::shared_ptr<Lexeme> clone() const override {
         return std::make_shared<LeftParenLexeme>(*this);

@@ -43,6 +43,7 @@ private:
     // пасхалка
     QMovie* monkeyMovie;
     void setupMonkeyAnimation();
+    void updateMonkeySize();
 };
 
 #endif // MAINWINDOW_H

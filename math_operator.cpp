@@ -22,7 +22,7 @@ bool MathOperator::exists(const std::string& text, Type type) {
 const MathOperator::Info& MathOperator::info() const {
     auto iterator = operationTable().find({operatorText, operatorType});
     if (iterator == operationTable().end())
-        throw LexerException("Unknown operator: " + operatorText);
+        throw LexemeException("Unknown operator: " + operatorText);
     return iterator->second;
 }
 

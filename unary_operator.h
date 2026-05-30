@@ -1,7 +1,6 @@
 #ifndef UNARY_OPERATOR_H
 #define UNARY_OPERATOR_H
 
-#include "constants.h"
 #include "math_operator.h"
 
 class UnaryOperator : public MathOperator {
@@ -23,6 +22,14 @@ public:
         if (!info().unaryOperation)
             throw MathException("Error: invalid unary operation");
         return info().unaryOperation(value);
+    }
+
+    void evaluate(std::stack<double>& values) const override {
+        if (values.empty())
+            throw MathException("Error: not enough arguments for unary operator");
+        double value = values.top();
+        values.pop();
+        values.push(apply(value));
     }
 };
 
