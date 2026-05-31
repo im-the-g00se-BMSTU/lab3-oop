@@ -26,7 +26,7 @@ Lexeme* ExpressionEditor::lastLexeme() const {
 NumberLexeme* ExpressionEditor::lastNumber() const {
     NumberLexeme* result = nullptr;
     Lexeme* lexeme = lastLexeme();
-    if (lexeme && lexeme->kind() == LexemeKind::Number)
+    if (lexeme && lexeme->type() == LexemeType::Number)
         result = static_cast<NumberLexeme*>(lexeme);
     return result;
 }
@@ -40,7 +40,7 @@ std::string ExpressionEditor::transformToString() const {
 
 void ExpressionEditor::replaceWithSingleNumber(const std::string& value) {
     lexemes.clear();
-    lexemes.push_back(lexemeFactory.create(LexemeKind::Number, value));
+    lexemes.push_back(lexemeFactory.create(LexemeType::Number, value));
 }
 
 void ExpressionEditor::setResult(const std::string& value) {
@@ -55,7 +55,7 @@ void ExpressionEditor::appendDigit(char digit) {
     if (number)
         number->appendDigit(digit);
     else
-        appendLexeme(LexemeKind::Number, std::string(1, digit));
+        appendLexeme(LexemeType::Number, std::string(1, digit));
 }
 
 void ExpressionEditor::appendDot() {
@@ -65,15 +65,15 @@ void ExpressionEditor::appendDot() {
     if (number)
         number->appendDot();
     else
-        appendLexeme(LexemeKind::Number, "0.");
+        appendLexeme(LexemeType::Number, "0.");
 }
 
 bool ExpressionEditor::hasOpenParen() const {
     int balance = 0;
     for (const std::shared_ptr<Lexeme>& lexeme : lexemes) {
-        if (lexeme->kind() == LexemeKind::LeftParen)
+        if (lexeme->type() == LexemeType::LeftParen)
             ++balance;
-        else if (lexeme->kind() == LexemeKind::RightParen)
+        else if (lexeme->type() == LexemeType::RightParen)
             --balance;
     }
     return balance > 0;
@@ -81,18 +81,18 @@ bool ExpressionEditor::hasOpenParen() const {
 
 bool ExpressionEditor::lastLexemeCanCloseParen() const {
     const Lexeme* lexeme = lastLexeme();
-    return lexeme && (lexeme->kind() == LexemeKind::Number ||
-                      lexeme->kind() == LexemeKind::RightParen);
+    return lexeme && (lexeme->type() == LexemeType::Number ||
+                      lexeme->type() == LexemeType::RightParen);
 }
 
 bool ExpressionEditor::shouldUseUnaryOperator(const std::string& text) const {
     const Lexeme* lexeme = lastLexeme();
-    return text == "-" && (!lexeme || lexeme->kind() == LexemeKind::LeftParen ||
-                           lexeme->kind() == LexemeKind::BinaryOperator);
+    return text == "-" && (!lexeme || lexeme->type() == LexemeType::LeftParen ||
+                           lexeme->type() == LexemeType::BinaryOperator);
 }
 
-void ExpressionEditor::appendLexeme(LexemeKind kind, const std::string& text) {
-    if (kind != LexemeKind::BinaryOperator && mode == EditorMode::ResultShown)
+void ExpressionEditor::appendLexeme(LexemeType kind, const std::string& text) {
+    if (kind != LexemeType::BinaryOperator && mode == EditorMode::ResultShown)
         clear();
     std::shared_ptr<Lexeme> lexeme = lexemeFactory.create(kind, text);
     Lexeme* previous = lastLexeme();
@@ -103,11 +103,11 @@ void ExpressionEditor::appendLexeme(LexemeKind kind, const std::string& text) {
 }
 
 void ExpressionEditor::appendBinaryOperator(const std::string& text) {
-    appendLexeme(LexemeKind::BinaryOperator, text);
+    appendLexeme(LexemeType::BinaryOperator, text);
 }
 
 void ExpressionEditor::appendUnaryOperator(const std::string& text) {
-    appendLexeme(LexemeKind::UnaryOperator, text);
+    appendLexeme(LexemeType::UnaryOperator, text);
 }
 
 void ExpressionEditor::appendOperator(const std::string& text) {
@@ -118,13 +118,13 @@ void ExpressionEditor::appendOperator(const std::string& text) {
 }
 
 void ExpressionEditor::appendLeftParen() {
-    appendLexeme(LexemeKind::LeftParen, "(");
+    appendLexeme(LexemeType::LeftParen, "(");
 }
 
 void ExpressionEditor::appendRightParen() {
     Lexeme* previous = lastLexeme();
     if (hasOpenParen() && lastLexemeCanCloseParen()) {
-        std::shared_ptr<Lexeme> lexeme = lexemeFactory.create(LexemeKind::RightParen, ")");
+        std::shared_ptr<Lexeme> lexeme = lexemeFactory.create(LexemeType::RightParen, ")");
         if (lexeme->canBePlacedAfter(previous)) {
             lexemes.push_back(lexeme);
             mode = EditorMode::Editing;
@@ -135,8 +135,8 @@ void ExpressionEditor::appendRightParen() {
 bool ExpressionEditor::canEvaluate() const {
     const Lexeme* lexeme = lastLexeme();
     return !empty() && !hasOpenParen() &&
-           (lexeme->kind() == LexemeKind::Number ||
-            lexeme->kind() == LexemeKind::RightParen);
+           (lexeme->type() == LexemeType::Number ||
+            lexeme->type() == LexemeType::RightParen);
 }
 
 void ExpressionEditor::backspace() {

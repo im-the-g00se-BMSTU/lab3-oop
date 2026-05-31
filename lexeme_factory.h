@@ -16,14 +16,14 @@ class LexemeFactory {
 public:
     LexemeFactory()
         : lexemeCreators({
-              {LexemeKind::Number, createNumber},
-              {LexemeKind::BinaryOperator, createBinaryOperator},
-              {LexemeKind::UnaryOperator, createUnaryOperator},
-              {LexemeKind::LeftParen, createLeftParen},
-              {LexemeKind::RightParen, createRightParen}
+              {LexemeType::Number, createNumber},
+              {LexemeType::BinaryOperator, createBinaryOperator},
+              {LexemeType::UnaryOperator, createUnaryOperator},
+              {LexemeType::LeftParen, createLeftParen},
+              {LexemeType::RightParen, createRightParen}
           }) {}
 
-    std::shared_ptr<Lexeme> create(LexemeKind kind, const std::string& text) const {
+    std::shared_ptr<Lexeme> create(LexemeType kind, const std::string& text) const {
         auto iterator = lexemeCreators.find(kind);
         if (iterator == lexemeCreators.end())
             throw LexemeException("Suitable lexeme factory was not found");
@@ -33,7 +33,7 @@ public:
 
 private:
     using Creator = std::function<std::shared_ptr<Lexeme>(const std::string&)>;
-    std::map<LexemeKind, Creator> lexemeCreators;
+    std::map<LexemeType, Creator> lexemeCreators;
 
     static std::shared_ptr<Lexeme> createNumber(const std::string& text) {
         return std::make_shared<NumberLexeme>(text);

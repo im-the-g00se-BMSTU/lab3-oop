@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget* parent)
     setupMonkeyAnimation();
 
     connectButtons();
-    refreshUi();
+    updateUi();
 }
 
 MainWindow::~MainWindow() {
@@ -40,61 +40,56 @@ void MainWindow::connectButtons() {
     connect(ui->deleteButton, &QPushButton::clicked, this, &MainWindow::onDeleteButtonClicked);
 }
 
-void MainWindow::refreshUi() {
+void MainWindow::updateUi() {
     ui->displayLineEdit->setText(QString::fromStdString(facade.getDisplayText()));
     ui->errorLabel->setText(QString::fromStdString(facade.getErrorText()));
-}
-
-void MainWindow::executeCommand(Input& input) {
-    input.execute();
-    refreshUi();
 }
 
 void MainWindow::onDigitButtonClicked() {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button && !button->text().isEmpty()) {
         std::string text(1, button->text().front().toLatin1());
-        InputDigit command(facade, text);
-        executeCommand(command);
+        facade.handleDigitInput(text);
+        updateUi();
     }
 }
 
 void MainWindow::onOperatorButtonClicked() {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        InputOperator command(facade, button->text().toStdString());
-        executeCommand(command);
+        facade.handleOperatorInput(button->text().toStdString());
+        updateUi();
     }
 }
 
 void MainWindow::onDotButtonClicked() {
-    InputCommand command(facade, InputCommandType::Dot);
-    executeCommand(command);
+    facade.handleCommandInput(InputCommandType::Dot);
+    updateUi();
 }
 
 void MainWindow::onLeftParenButtonClicked() {
-    InputCommand command(facade, InputCommandType::LeftParen);
-    executeCommand(command);
+    facade.handleCommandInput(InputCommandType::LeftParen);
+    updateUi();
 }
 
 void MainWindow::onRightParenButtonClicked() {
-    InputCommand command(facade, InputCommandType::RightParen);
-    executeCommand(command);
+    facade.handleCommandInput(InputCommandType::RightParen);
+    updateUi();
 }
 
 void MainWindow::onClearButtonClicked() {
-    InputCommand command(facade, InputCommandType::Clear);
-    executeCommand(command);
+    facade.handleCommandInput(InputCommandType::Clear);
+    updateUi();
 }
 
 void MainWindow::onDeleteButtonClicked() {
-    InputCommand command(facade, InputCommandType::Backspace);
-    executeCommand(command);
+    facade.handleCommandInput(InputCommandType::Backspace);
+    updateUi();
 }
 
 void MainWindow::onEqualsButtonClicked() {
-    InputEvaluation command(facade);
-    executeCommand(command);
+    facade.evaluateExpression();
+    updateUi();
 }
 
 // пасхалка

@@ -1,35 +1,38 @@
 #ifndef PAREN_LEXEME_H
 #define PAREN_LEXEME_H
 
-#include "math_operator.h"
+#include "lexeme.h"
 
-class LeftParenLexeme : public MathOperator {
+class LeftParenLexeme : public Lexeme {
 public:
-    LeftParenLexeme() : MathOperator("(", Type::LeftParen) {}
+    LexemeType type() const override {
+        return LexemeType::LeftParen;
+    }
 
-    std::shared_ptr<Lexeme> clone() const override {
-        return std::make_shared<LeftParenLexeme>(*this);
+    std::string text() const override {
+        return "(";
     }
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        return !previous || previous->kind() == LexemeKind::LeftParen ||
-               previous->kind() == LexemeKind::BinaryOperator ||
-               previous->kind() == LexemeKind::UnaryOperator;
+        return !previous || previous->type() == LexemeType::LeftParen ||
+               previous->type() == LexemeType::BinaryOperator ||
+               previous->type() == LexemeType::UnaryOperator;
     }
 };
 
-class RightParenLexeme : public MathOperator {
+class RightParenLexeme : public Lexeme {
 public:
-    RightParenLexeme()
-        : MathOperator(")", Type::RightParen) {}
+    LexemeType type() const override {
+        return LexemeType::RightParen;
+    }
 
-    std::shared_ptr<Lexeme> clone() const override {
-        return std::make_shared<RightParenLexeme>(*this);
+    std::string text() const override {
+        return ")";
     }
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        return previous && (previous->kind() == LexemeKind::Number ||
-                            previous->kind() == LexemeKind::RightParen);
+        return previous && (previous->type() == LexemeType::Number ||
+                            previous->type() == LexemeType::RightParen);
     }
 };
 

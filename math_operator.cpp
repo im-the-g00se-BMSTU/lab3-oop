@@ -17,9 +17,7 @@ MathOperator::MathOperator(const std::string& text, Type type)
           {{"-", Type::Binary}, OperatorPriority::Additive},
           {{"*", Type::Binary}, OperatorPriority::Multiplicative},
           {{"/", Type::Binary}, OperatorPriority::Multiplicative},
-          {{"-", Type::Unary}, OperatorPriority::Unary},
-          {{"(", Type::LeftParen}, OperatorPriority::None},
-          {{")", Type::RightParen}, OperatorPriority::None}
+          {{"-", Type::Unary}, OperatorPriority::Unary}
       }) {
     validateOperator();
 }
@@ -28,14 +26,10 @@ std::string MathOperator::text() const {
     return operatorText;
 }
 
-LexemeKind MathOperator::kind() const {
-    LexemeKind result = LexemeKind::BinaryOperator;
+LexemeType MathOperator::type() const {
+    LexemeType result = LexemeType::BinaryOperator;
     if (operatorType == Type::Unary)
-        result = LexemeKind::UnaryOperator;
-    else if (operatorType == Type::LeftParen)
-        result = LexemeKind::LeftParen;
-    else if (operatorType == Type::RightParen)
-        result = LexemeKind::RightParen;
+        result = LexemeType::UnaryOperator;
     return result;
 }
 

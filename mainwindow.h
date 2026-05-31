@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "inputs.h"
 #include "constants.h"
 #include "facade.h"
 #include "./ui_mainwindow.h"
@@ -27,9 +26,8 @@ private:
     Facade facade;
 
     void connectButtons();
-    void refreshUi();
 
-    void executeCommand(Input& input);
+    void updateUi();
 
     void onDigitButtonClicked();
     void onOperatorButtonClicked();

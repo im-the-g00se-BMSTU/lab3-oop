@@ -5,11 +5,11 @@ std::vector<std::shared_ptr<Lexeme>> ExpressionCalculator::translateToRpn(
     std::vector<std::shared_ptr<Lexeme>> output;
     std::stack<std::shared_ptr<Lexeme>> operators;
     for (const std::shared_ptr<Lexeme>& lexeme : lexemes) {
-        if (lexeme->kind() == LexemeKind::Number)
+        if (lexeme->type() == LexemeType::Number)
             output.push_back(lexeme);
-        else if (lexeme->kind() == LexemeKind::LeftParen)
+        else if (lexeme->type() == LexemeType::LeftParen)
             operators.push(lexeme);
-        else if (lexeme->kind() == LexemeKind::RightParen)
+        else if (lexeme->type() == LexemeType::RightParen)
             handleRightParen(output, operators);
         else
             handleOperator(lexeme, output, operators);
@@ -22,7 +22,7 @@ void ExpressionCalculator::appendRemainingOperators(
     std::vector<std::shared_ptr<Lexeme>>& output,
     std::stack<std::shared_ptr<Lexeme>>& operators) const {
     while (!operators.empty()) {
-        if (operators.top()->kind() == LexemeKind::LeftParen)
+        if (operators.top()->type() == LexemeType::LeftParen)
             throw LexemeException("Error: mismatched parentheses");
         output.push_back(operators.top());
         operators.pop();
@@ -34,7 +34,7 @@ void ExpressionCalculator::handleRightParen(
     std::stack<std::shared_ptr<Lexeme>>& operators) const {
     bool leftParenFound = false;
     while (!operators.empty() && !leftParenFound) {
-        if (operators.top()->kind() == LexemeKind::LeftParen)
+        if (operators.top()->type() == LexemeType::LeftParen)
             leftParenFound = true;
         else
             output.push_back(operators.top());
@@ -47,7 +47,7 @@ void ExpressionCalculator::handleRightParen(
 void ExpressionCalculator::handleOperator(const std::shared_ptr<Lexeme>& lexeme,
                                           std::vector<std::shared_ptr<Lexeme>>& output,
                                           std::stack<std::shared_ptr<Lexeme>>& operators) const {
-    while (!operators.empty() && operators.top()->kind() != LexemeKind::LeftParen &&
+    while (!operators.empty() && operators.top()->type() != LexemeType::LeftParen &&
            operators.top()->priority() <= lexeme->priority()) {
         output.push_back(operators.top());
         operators.pop();

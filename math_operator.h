@@ -14,14 +14,12 @@ class MathOperator : public Lexeme {
 public:
     enum class Type {
         Binary,
-        Unary,
-        LeftParen,
-        RightParen
+        Unary
     };
 
     MathOperator(const std::string& text, Type type);
 
-    LexemeKind kind() const override;
+    LexemeType type() const override;
     std::string text() const override;
     OperatorPriority priority() const override;
 

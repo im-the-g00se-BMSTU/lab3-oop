@@ -11,12 +11,8 @@ public:
         : MathOperator(text, Type::Binary) {}
 
     bool canBePlacedAfter(const Lexeme* previous) const override {
-        return previous && (previous->kind() == LexemeKind::Number ||
-                            previous->kind() == LexemeKind::RightParen);
-    }
-
-    std::shared_ptr<Lexeme> clone() const override {
-        return std::make_shared<BinaryOperator>(*this);
+        return previous && (previous->type() == LexemeType::Number ||
+                            previous->type() == LexemeType::RightParen);
     }
 
     double apply(double left, double right) const {

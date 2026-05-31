@@ -3,22 +3,18 @@
 NumberLexeme::NumberLexeme(const std::string& value)
     : numberText(value) {}
 
-LexemeKind NumberLexeme::kind() const {
-    return LexemeKind::Number;
+LexemeType NumberLexeme::type() const {
+    return LexemeType::Number;
 }
 
 std::string NumberLexeme::text() const {
     return numberText;
 }
 
-std::shared_ptr<Lexeme> NumberLexeme::clone() const {
-    return std::make_shared<NumberLexeme>(*this);
-}
-
 bool NumberLexeme::canBePlacedAfter(const Lexeme* previous) const {
-    return !previous || previous->kind() == LexemeKind::LeftParen ||
-           previous->kind() == LexemeKind::BinaryOperator ||
-           previous->kind() == LexemeKind::UnaryOperator;
+    return !previous || previous->type() == LexemeType::LeftParen ||
+           previous->type() == LexemeType::BinaryOperator ||
+           previous->type() == LexemeType::UnaryOperator;
 }
 
 void NumberLexeme::evaluate(std::stack<double>& values) const {

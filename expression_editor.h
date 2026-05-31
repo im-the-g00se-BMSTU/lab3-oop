@@ -34,7 +34,7 @@ public:
 private:
     void appendBinaryOperator(const std::string& text);
     void appendUnaryOperator(const std::string& text);
-    void appendLexeme(LexemeKind kind, const std::string& text);
+    void appendLexeme(LexemeType kind, const std::string& text);
     void replaceWithSingleNumber(const std::string& value);
 
     Lexeme* lastLexeme() const;
