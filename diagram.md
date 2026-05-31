@@ -1,278 +1,139 @@
 ```mermaid
-
 classDiagram
-
-&#x20;   QMainWindow <|-- MainWindow
-
-
-
-&#x20;   MainWindow \*-- Facade
-
-&#x20;   MainWindow ..> InputCommandType
-
-
-
-&#x20;   Facade \*-- ExpressionEditor
-
-&#x20;   Facade \*-- ExpressionCalculator
-
-&#x20;   Facade --> InputCommandType
-
-
-
-&#x20;   ExpressionEditor \*-- LexemeFactory
-
-&#x20;   ExpressionEditor o-- Lexeme
-
-
-
-&#x20;   ExpressionCalculator ..> Lexeme
-
-
-
-&#x20;   LexemeFactory ..> Lexeme
-
-&#x20;   LexemeFactory ..> NumberLexeme
-
-&#x20;   LexemeFactory ..> BinaryOperator
-
-&#x20;   LexemeFactory ..> UnaryOperator
-
-&#x20;   LexemeFactory ..> LeftParenLexeme
-
-&#x20;   LexemeFactory ..> RightParenLexeme
-
-
-
-&#x20;   Lexeme <|-- NumberLexeme
-
-&#x20;   Lexeme <|-- MathOperator
-
-&#x20;   Lexeme <|-- LeftParenLexeme
-
-&#x20;   Lexeme <|-- RightParenLexeme
-
-
-
-&#x20;   MathOperator <|-- BinaryOperator
-
-&#x20;   MathOperator <|-- UnaryOperator
-
-
-
-&#x20;   Lexeme --> LexemeType
-
-&#x20;   MathOperator --> OperatorPriority
-
-
-
-&#x20;   LexemeException --|> std\_exception
-
-&#x20;   MathException --|> std\_exception
-
-
-
-&#x20;   class MainWindow {
-
-&#x20;       -Ui::MainWindow\* ui
-
-&#x20;       -Facade facade
-
-&#x20;       -QMovie\* monkeyMovie
-
-&#x20;       -connectButtons()
-
-&#x20;       -updateUi()
-
-&#x20;       -onDigitButtonClicked()
-
-&#x20;       -onOperatorButtonClicked()
-
-&#x20;   }
-
-
-
-&#x20;   class Facade {
-
-&#x20;       -ExpressionEditor editor
-
-&#x20;       -ExpressionCalculator calculator
-
-&#x20;       -string errorText
-
-&#x20;       -map commandHandlers
-
-&#x20;       +handleDigitInput(string text)
-
-&#x20;       +handleOperatorInput(string text)
-
-&#x20;       +handleCommandInput(InputCommandType type)
-
-&#x20;       +evaluateExpression()
-
-&#x20;       +getDisplayText() string
-
-&#x20;       +getErrorText() string
-
-&#x20;   }
-
-
-
-&#x20;   class ExpressionEditor {
-
-&#x20;       -vector\~shared\_ptr\~Lexeme\~\~ lexemes
-
-&#x20;       -LexemeFactory lexemeFactory
-
-&#x20;       -EditorMode mode
-
-&#x20;       +appendDigit(char digit)
-
-&#x20;       +appendDot()
-
-&#x20;       +appendOperator(string text)
-
-&#x20;       +appendLeftParen()
-
-&#x20;       +appendRightParen()
-
-&#x20;       +setResult(string value)
-
-&#x20;       +canEvaluate() bool
-
-&#x20;       +getLexemes() vector
-
-&#x20;   }
-
-
-
-&#x20;   class ExpressionCalculator {
-
-&#x20;       +translateToRpn(vector lexemes) vector
-
-&#x20;       +evaluate(vector rpn) double
-
-&#x20;       -appendRemainingOperators()
-
-&#x20;       -handleRightParen()
-
-&#x20;       -handleOperator()
-
-&#x20;   }
-
-
-
-&#x20;   class LexemeFactory {
-
-&#x20;       -map lexemeCreators
-
-&#x20;       +create(LexemeType kind, string text) shared\_ptr\~Lexeme\~
-
-&#x20;   }
-
-
-
-&#x20;   class Lexeme {
-
-&#x20;       <<abstract>>
-
-&#x20;       +type()\* LexemeType
-
-&#x20;       +text()\* string
-
-&#x20;       +canBePlacedAfter(Lexeme\*)\* bool
-
-&#x20;       +evaluate(stack\~double\~\&)
-
-&#x20;       +priority() OperatorPriority
-
-&#x20;   }
-
-
-
-&#x20;   class NumberLexeme {
-
-&#x20;       -string numberText
-
-&#x20;       +type() LexemeType
-
-&#x20;       +text() string
-
-&#x20;       +appendDigit(char digit)
-
-&#x20;       +appendDot()
-
-&#x20;       +removeLastChar() bool
-
-&#x20;       +evaluate(stack\~double\~\&)
-
-&#x20;   }
-
-
-
-&#x20;   class MathOperator {
-
-&#x20;       -string operatorText
-
-&#x20;       -Type operatorType
-
-&#x20;       -map binaryOperations
-
-&#x20;       -map unaryOperations
-
-&#x20;       -map priorities
-
-&#x20;       +type() LexemeType
-
-&#x20;       +text() string
-
-&#x20;       +priority() OperatorPriority
-
-&#x20;   }
-
-
-
-&#x20;   class BinaryOperator {
-
-&#x20;       +canBePlacedAfter(Lexeme\*) bool
-
-&#x20;       +evaluate(stack\~double\~\&)
-
-&#x20;   }
-
-
-
-&#x20;   class UnaryOperator {
-
-&#x20;       +canBePlacedAfter(Lexeme\*) bool
-
-&#x20;       +evaluate(stack\~double\~\&)
-
-&#x20;   }
-
-
-
-&#x20;   class LeftParenLexeme {
-
-&#x20;       +type() LexemeType
-
-&#x20;       +text() string
-
-&#x20;       +canBePlacedAfter(Lexeme\*) bool
-
-&#x20;   }
-
-
-
-&#x20;   class RightParenLexeme {
-
-&#x20;       +type() LexemeType
-
-&#x20;       +text() string
-
-&#x20;       +canBePlacedAfter(Lexeme\*) bool
-
-&#x20;   }
-
+    QMainWindow <|-- MainWindow
+
+    MainWindow *-- Facade
+    MainWindow ..> InputCommandType
+
+    Facade *-- ExpressionEditor
+    Facade *-- ExpressionCalculator
+    Facade --> InputCommandType
+
+    ExpressionEditor *-- LexemeFactory
+    ExpressionEditor o-- Lexeme
+
+    ExpressionCalculator ..> Lexeme
+
+    LexemeFactory ..> Lexeme
+    LexemeFactory ..> NumberLexeme
+    LexemeFactory ..> BinaryOperator
+    LexemeFactory ..> UnaryOperator
+    LexemeFactory ..> LeftParenLexeme
+    LexemeFactory ..> RightParenLexeme
+
+    Lexeme <|-- NumberLexeme
+    Lexeme <|-- MathOperator
+    Lexeme <|-- LeftParenLexeme
+    Lexeme <|-- RightParenLexeme
+
+    MathOperator <|-- BinaryOperator
+    MathOperator <|-- UnaryOperator
+
+    Lexeme --> LexemeType
+    MathOperator --> OperatorPriority
+
+    LexemeException --|> std_exception
+    MathException --|> std_exception
+
+    class MainWindow {
+        -Ui::MainWindow* ui
+        -Facade facade
+        -QMovie* monkeyMovie
+        -connectButtons()
+        -updateUi()
+        -onDigitButtonClicked()
+        -onOperatorButtonClicked()
+    }
+
+    class Facade {
+        -ExpressionEditor editor
+        -ExpressionCalculator calculator
+        -string errorText
+        -map commandHandlers
+        +handleDigitInput(string text)
+        +handleOperatorInput(string text)
+        +handleCommandInput(InputCommandType type)
+        +evaluateExpression()
+        +getDisplayText() string
+        +getErrorText() string
+    }
+
+    class ExpressionEditor {
+        -vector~shared_ptr~Lexeme~~ lexemes
+        -LexemeFactory lexemeFactory
+        -EditorMode mode
+        +appendDigit(char digit)
+        +appendDot()
+        +appendOperator(string text)
+        +appendLeftParen()
+        +appendRightParen()
+        +setResult(string value)
+        +canEvaluate() bool
+        +getLexemes() vector
+    }
+
+    class ExpressionCalculator {
+        +translateToRpn(vector lexemes) vector
+        +evaluate(vector rpn) double
+        -appendRemainingOperators()
+        -handleRightParen()
+        -handleOperator()
+    }
+
+    class LexemeFactory {
+        -map lexemeCreators
+        +create(LexemeType kind, string text) shared_ptr~Lexeme~
+    }
+
+    class Lexeme {
+        <<abstract>>
+        +type()* LexemeType
+        +text()* string
+        +canBePlacedAfter(Lexeme*)* bool
+        +evaluate(stack~double~&)
+        +priority() OperatorPriority
+    }
+
+    class NumberLexeme {
+        -string numberText
+        +type() LexemeType
+        +text() string
+        +appendDigit(char digit)
+        +appendDot()
+        +removeLastChar() bool
+        +evaluate(stack~double~&)
+    }
+
+    class MathOperator {
+        -string operatorText
+        -Type operatorType
+        -map binaryOperations
+        -map unaryOperations
+        -map priorities
+        +type() LexemeType
+        +text() string
+        +priority() OperatorPriority
+    }
+
+    class BinaryOperator {
+        +canBePlacedAfter(Lexeme*) bool
+        +evaluate(stack~double~&)
+    }
+
+    class UnaryOperator {
+        +canBePlacedAfter(Lexeme*) bool
+        +evaluate(stack~double~&)
+    }
+
+    class LeftParenLexeme {
+        +type() LexemeType
+        +text() string
+        +canBePlacedAfter(Lexeme*) bool
+    }
+
+    class RightParenLexeme {
+        +type() LexemeType
+        +text() string
+        +canBePlacedAfter(Lexeme*) bool
+    }
 ```
-
